@@ -208,11 +208,15 @@
                   <a class="dropdown-item" href="./empty.html">
                     Matricula
                   </a>
-                  <a class="dropdown-item" href="./empty.html">
+                  <a class="dropdown-item" href="{{ route('profe.llistat') }}">
                     Horari
                   </a>
-                  <a class="dropdown-item" href="./badges.html">
-                    Badges
+                  <a class="dropdown-item" href="{{ route('profe.baixes') }}">
+                    Baixes
+                    <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
+                  </a>
+                  <a class="dropdown-item" href="{{ route('profe.guardies') }}">
+                    Guardies
                     <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
                   </a>
 
