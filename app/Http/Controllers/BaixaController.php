@@ -146,8 +146,12 @@ class BaixaController extends Controller
                                                     )
                                     AND module LIKE 'GUARDIA'
                                     ORDER BY dia asc, hora asc;");
- */
-$profes_baixa = DB::select("SELECT DISTINCT h.dia, h.hora, h.profe from horaris_horario h
+
+SELECT DISTINCT h.dia, h.hora, otra.profe, otra.cnt from horaris_horario h
+LEFT JOIN (
+SELECT COUNT(a.profe) as cnt , profe
+from asignades a group by a.profe ) otra
+ON h.profe = otra.profe
 where ( h.dia, h.hora )
         in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe
@@ -157,6 +161,43 @@ where ( h.dia, h.hora )
 AND module LIKE 'GUARDIA'
 AND h.profe NOT IN (select b.profe from baixes b
                 where CURDATE() BETWEEN b.datain and b.dataout)
+ORDER BY h.dia asc, h.hora asc;
+
+SELECT DISTINCT h.dia, h.hora, h.profe, IFNULL(otra.cnt,0) as fetes from horaris_horario h
+ LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.profe ) otra
+  ON h.profe = otra.profe
+  where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
+         where ho.profe in ( select b.profe from baixes b
+                        where CURDATE() BETWEEN b.datain and b.dataout)
+                         AND ho.module NOT LIKE 'GUARDIA')
+AND module LIKE 'GUARDIA'
+ AND h.profe NOT IN (select b.profe from baixes b
+                where CURDATE() BETWEEN b.datain and b.dataout)
+ORDER BY h.dia asc, h.hora asc;
+                                    */
+
+                                  /*   $profes_baixa = DB::select("SELECT DISTINCT h.dia, h.hora, h.profe from horaris_horario h
+                                    where ( h.dia, h.hora )
+                                            in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
+                                            where ho.profe
+                                                in ( select b.profe from baixes b
+                                                    where CURDATE() BETWEEN b.datain and b.dataout)
+                                            AND ho.module NOT LIKE 'GUARDIA')
+                                    AND module LIKE 'GUARDIA'
+                                    AND h.profe NOT IN (select b.profe from baixes b
+                                                    where CURDATE() BETWEEN b.datain and b.dataout)
+                                    ORDER BY h.dia asc, h.hora asc ;");
+ */
+$profes_baixa = DB::select("SELECT DISTINCT h.dia, h.hora, h.profe, IFNULL(otra.cnt,0) as fetes from horaris_horario h
+LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.profe ) otra
+ ON h.profe = otra.profe
+ where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
+        where ho.profe in ( select b.profe from baixes b
+                       where CURDATE() BETWEEN b.datain and b.dataout)
+                        AND ho.module NOT LIKE 'GUARDIA')
+AND module LIKE 'GUARDIA'
+AND h.profe NOT IN (select b.profe from baixes b
+               where CURDATE() BETWEEN b.datain and b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
 
 
@@ -187,11 +228,11 @@ ORDER BY h.dia asc, h.hora asc;");
                                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
                             }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
-                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe . '</option>';
+                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
                             }
                         }
                         } else {
-                            $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe . '</option>';
+                            $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
                         }
                     }
                 }
@@ -211,11 +252,11 @@ ORDER BY h.dia asc, h.hora asc;");
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
                                 }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
-                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe . '</option>';
+                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
                                 }
                             }
                         } else {
-                            $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe . '</option>';
+                            $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
                         }
                     }
                 }
