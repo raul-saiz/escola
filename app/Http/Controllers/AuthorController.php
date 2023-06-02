@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AuthorController extends Controller
 {
-
     private $calendario = [];
-
 
     public function __construct()
     {
@@ -87,6 +85,4 @@ class AuthorController extends Controller
             }
         }
     }
-
-
 }
