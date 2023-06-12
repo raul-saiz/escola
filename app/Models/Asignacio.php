@@ -18,6 +18,7 @@ ORDER BY dia asc, hora asc; */
 /**
  * @property string $profe
  * @property string $modul
+ * @property string $tasca
  * @property int $semana
  */
 class Asignacio extends Model
@@ -34,6 +35,6 @@ class Asignacio extends Model
     /**
      * @var array
      */
-    protected $fillable = ['profe', 'modul', 'semana'];
+    protected $fillable = ['profe', 'modul', 'semana','tasca'];
 }
 

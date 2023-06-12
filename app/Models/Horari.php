@@ -29,6 +29,10 @@ class Horari extends Model
 
 
     protected $primaryKey = 'profe';
+
+    public $incrementing = false;
+    public $timestamps = false;
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

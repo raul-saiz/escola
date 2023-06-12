@@ -52,6 +52,7 @@ class User extends Authenticatable
      * @var bool
      */
     public $incrementing = false;
+    public $timestamps = false;
 
     /**
      * The attributes that should be hidden for serialization.

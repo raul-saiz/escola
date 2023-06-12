@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class BaixaController extends Controller
 {
-
+    private $asignadosVisual = [];
     private $asignados = [];
     private $calendario = [];
     private $profes_baixa = [];
@@ -53,11 +53,12 @@ class BaixaController extends Controller
         $out = $request->input('out');
         $in = $request->input('in');
         $user = $request->input('profe');
+        $tasca = $request->input('tasca');
 
         if ($request->has('add')) {
             Baixa::updateOrCreate(
                 ['profe' => $user],
-                ['datain' => $in, 'dataout' => $out, 'updated_at' => now()]
+                ['datain' => $in, 'dataout' => $out, 'tasca' =>$tasca]
             );
         }
 
@@ -86,6 +87,53 @@ class BaixaController extends Controller
             }
         });
         return Redirect::to($request->get('http_referrer') . '/profe/guardies');
+    }
+
+    public function visualGuardia(Request $request)
+    {
+        $week  = date('W', strtotime(now()));
+        $day  = date('w', strtotime(now()));
+        $assig_a_cobrir = DB::select("select * from asignades where semana =".$week." AND modul LIKE '".$day."-%' ");
+
+//dd($assig_a_cobrir);
+        $this->creaVisual($assig_a_cobrir);
+
+        $titulo_horas = [
+            '8h-9h', '9h-10h', '10h-11h',
+            '11h-11.30h',
+            '11.30h-12.30h', '12.30h-13.30h', '13.30h-14.30h',
+            '15h-16h', '16h-17h', '17h-18h',
+            '18h-18.30h',
+            '18.30h-19.30', '19.30h-20.30h', '20.30h-21.30h'
+        ];
+
+        $asignados = $this->asignadosVisual;
+      // dd($asignados);
+        return view('front.pages.mostrar', compact('asignados', 'titulo_horas'));
+
+    }
+
+    public function creaVisual($datos)
+    {
+        foreach ($datos as $dat) {
+
+
+            $extra = explode('-', $dat->modul, 4);
+            $numprofe = 1;
+            if (isset($this->asignadosVisual[$extra[1]][$extra[0]])) {
+                $numprofe = count($this->asignadosVisual[$extra[1]][$extra[0]]) + 1;
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][1] =  $dat->profe;
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][2] =  $dat->tasca;
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[3];
+            } else {
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][1] = $dat->profe;
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][2] = $dat->tasca;
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[3];
+            }
+        }
+
     }
 
     public function guardies()

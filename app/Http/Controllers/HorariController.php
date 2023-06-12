@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Horari;
+use App\Models\User;
 
 class HorariController extends Controller
 {
@@ -13,6 +14,40 @@ class HorariController extends Controller
     {
         return view('back.pages.modifguardia');
     }
+
+
+    public function publicListado()
+    {
+        $users = User::query();
+        $users = $users->paginate(15);
+        return view('front.pages.profes', compact('users'));
+    }
+
+    
+    public function visualHorari($id)
+    {
+        $titulo_horas = [
+            '8h-9h', '9h-10h', '10h-11h',
+            '11h-11.30h',
+            '11.30h-12.30h', '12.30h-13.30h', '13.30h-14.30h',
+            '15h-16h', '16h-17h', '17h-18h',
+            '18h-18.30h',
+            '18.30h-19.30', '19.30h-20.30h', '20.30h-21.30h'
+        ];
+
+        $user = User::search('nom_c', $id)->first();
+        $horas = Horari::where('profe', 'like', '%' . $id . '%')
+        ->orderBy('hora', 'asc')
+        ->orderBy('dia', 'asc')
+        ->get();
+
+    $this->creaCalendar($horas);
+    $calendario = $this->calendario;
+
+    return view('front.pages.horario', compact('user', 'horas', 'calendario', 'titulo_horas'));
+
+    }
+
 
     public function insert(Request $request)
     {

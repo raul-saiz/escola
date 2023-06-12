@@ -39,6 +39,19 @@
                      @endif
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <label>Tasca : </label>
+                </td>
+                    <td>
+                        @if (isset( $data['tasca'] ))
+
+                        <select class="form-select" id="tasca" name="tasca" > <option value="Moodle" selected="Moodle" >Moodle</option><option value="Prefectura" >Prefectura</option></select>
+                     @else
+                     <select class="form-select" id="tasca" name="tasca" > <option value="Moodle" selected="Moodle" >Moodle</option><option value="Prefectura" >Prefectura</option></select>
+                     @endif
+                </td>
+            </tr>
 
 
             <tr>

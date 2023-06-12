@@ -17,6 +17,7 @@
                                 <th><button class="table-sort" data-sort="sort-name">Nom</button></th>
                                 <th><button class="table-sort" data-sort="sort-city">Data inici</button></th>
                                 <th><button class="table-sort" data-sort="sort-type">Data fi</button></th>
+                                <th><button class="table-sort" data-sort="sort-type">tasca</button></th>
                             </tr>
                         </thead>
                         <tbody class="table-tbody">
@@ -26,12 +27,14 @@
                                         <td class="sort-name">{{ $user->profe }}</td>
                                         <td class="sort-city">{{ $user->datain }}</td>
                                         <td class="sort-type">{{ $user->dataout }}</td>
+                                        <td class="sort-type">{{ $user->tasca }}</td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
                                     <td class="sort-name">--</td>
                                     <td class="sort-city">--</td>
+                                    <td class="sort-type">--</td>
                                     <td class="sort-type">--</td>
                                 </tr>
                             @endif

@@ -19,6 +19,7 @@ ORDER BY dia asc, hora asc; */
  * @property string $profe
  * @property string $datain
  * @property string $dataout
+ * @property enum $tasca
  */
 class Baixa extends Model
 {
@@ -29,10 +30,11 @@ class Baixa extends Model
      */
     protected $table = 'baixes';
     public $incrementing = false;
+    public $timestamps = false;
     protected $primaryKey = 'profe';
     /**
      * @var array
      */
-    protected $fillable = ['profe', 'datain', 'dataout', 'created_at', 'updated_at'];
+    protected $fillable = ['profe', 'datain', 'dataout', 'tasca'];
 }
 

@@ -64,6 +64,9 @@ Route::prefix('profe')->name('profe.')->group(function(){
         Route::post('/baixes/{id}/add',[BaixaController::class,'insert'])->name('insertbaixa');
         Route::get('/guardies',[BaixaController::class,'guardies'])->name('guardies');
         Route::post('/guardies',[BaixaController::class,'salvaguardies'])->name('salvaguardies');
+        Route::get('/visualGuardia',[BaixaController::class,'visualGuardia'])->name('visualGuardia');
+        Route::get('/visualHorari/{id}',[HorariController::class,'visualHorari'])->name('visualHorari');
+        Route::get('/publicHorari',[HorariController::class,'publicListado'])->name('publicHorari');
     });
 
     Route::middleware([])->group(function(){
