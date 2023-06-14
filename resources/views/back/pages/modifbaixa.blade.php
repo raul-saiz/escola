@@ -56,13 +56,13 @@
 
             <tr>
                 <td colspan='2'>
-                    <input type='submit' value="Introdueix baixa" name="add"/>
+                    <input type='submit' value="Introdueix Absència" name="add"/>
                 </td>
             </tr>
 
             <tr>
                 <td colspan='2'>
-                    <input type='submit' value="Esborrar baixa" name="delete"/>
+                    <input type='submit' value="Esborrar Absència" name="delete"/>
                 </td>
             </tr>
         </table>

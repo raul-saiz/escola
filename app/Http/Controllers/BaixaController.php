@@ -93,9 +93,9 @@ class BaixaController extends Controller
     {
         $week  = date('W', strtotime(now()));
         $day  = date('w', strtotime(now()));
-        $assig_a_cobrir = DB::select("select * from asignades where semana =".$week." AND modul LIKE '".$day."-%' ");
+        $assig_a_cobrir = DB::select("select * from asignades where semana =".$week." AND modul LIKE '".$day."-%'");
 
-//dd($assig_a_cobrir);
+        //dd($assig_a_cobrir);
         $this->creaVisual($assig_a_cobrir);
 
         $titulo_horas = [
@@ -108,13 +108,15 @@ class BaixaController extends Controller
         ];
 
         $asignados = $this->asignadosVisual;
-      // dd($asignados);
-        return view('front.pages.mostrar', compact('asignados', 'titulo_horas'));
+       //dd($asignados);
+        return view('front.pages.mostrar', compact('asignados', 'titulo_horas','day'));
 
     }
 
     public function creaVisual($datos)
     {
+
+       // dd($datos);
         foreach ($datos as $dat) {
 
 
