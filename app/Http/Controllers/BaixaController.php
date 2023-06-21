@@ -156,7 +156,10 @@ class BaixaController extends Controller
             '18.30h-19.30', '19.30h-20.30h', '20.30h-21.30h'
         ];
 
-        $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho , baixes b
+
+        $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module, ho.aula, max(ho.profe) as profe FROM horaris_horario ho, baixes b WHERE ho.profe = b.profe AND ho.module NOT LIKE '%TUT%' AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN( SELECT profe FROM baixes ) ) AND CURDATE() BETWEEN b.datain AND b.dataout AND ho.module NOT LIKE 'GUARDIA' AND( WEEK(CURDATE()) < WEEK(b.dataout) OR( WEEK(CURDATE()) = WEEK(b.dataout) AND DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout))) AND( WEEK(CURDATE()) < WEEK(b.dataout) OR( WEEK(CURDATE()) = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout) -1 AND ho.dia >= DAYOFWEEK(CURDATE()) -1)) group by ho.dia,ho.hora,ho.module,ho.aula;
+    ");
+       /*  $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho , baixes b
                                         where ho.profe = b.profe
                                                      and  CURDATE() BETWEEN b.datain and b.dataout
                                                      AND ho.module NOT LIKE 'GUARDIA'
@@ -173,7 +176,7 @@ class BaixaController extends Controller
                                             ho.dia <= DAYOFWEEK(b.dataout)-1 AND ho.dia >=  DAYOFWEEK(CURDATE())-1
                                             )
                                     )
-                                                            ");
+                                                            "); */
 
        /*  $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
