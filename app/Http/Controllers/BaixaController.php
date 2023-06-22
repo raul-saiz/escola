@@ -60,6 +60,16 @@ class BaixaController extends Controller
                 ['profe' => $user],
                 ['datain' => $in, 'dataout' => $out, 'tasca' =>$tasca]
             );
+           // dd($tasca);
+            $data = array("profe" => $user);
+            $week  = date('W', strtotime(now()));
+
+            DB::table("asignades")
+                ->where('modul','LIKE','%'.$user.'%')
+                ->where('semana', $week)
+                ->update(['tasca' =>$tasca]);
+           // Asignacio::where()->update();
+
         }
 
         if ($request->has('delete')) {
@@ -75,14 +85,16 @@ class BaixaController extends Controller
         Asignacio::where('semana', $week)->delete();
         $input = $request->collect();
 
-dd($input);
+//dd($input);
         $input->each(function ($profe, $modul) {
             $week  = date('W', strtotime(now()));
 
 
             if (is_numeric($modul[0]) && isset($profe)) {
-                dd($modul);
-               $tasca = $modul[2];
+               // dd($modul);
+               $extra = explode('-', $modul, 5);
+              // dd($extra);
+               $tasca = $extra[2];
 
                     Asignacio::updateOrCreate(
                         ['semana' => $week, 'modul' => $modul],
@@ -126,19 +138,19 @@ dd($input);
         foreach ($datos as $dat) {
 
 
-            $extra = explode('-', $dat->modul, 4);
+            $extra = explode('-', $dat->modul, 6);
             $numprofe = 1;
             if (isset($this->asignadosVisual[$extra[1]][$extra[0]])) {
                 $numprofe = count($this->asignadosVisual[$extra[1]][$extra[0]]) + 1;
-                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[4];
                 $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][1] =  $dat->profe;
                 $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][2] =  $dat->tasca;
-                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[3];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[5];
             } else {
-                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][0] = $extra[4];
                 $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][1] = $dat->profe;
                 $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][2] = $dat->tasca;
-                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[3];
+                $this->asignadosVisual[$extra[1]][$extra[0]][$numprofe][3] =   $extra[5];
             }
         }
 
@@ -166,16 +178,14 @@ dd($input);
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module, ho.aula, max(ho.profe) as profe , b.tasca FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
         AND ho.module NOT LIKE '%TUT%'
-        AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN( SELECT profe FROM baixes ) )
-        AND CURDATE() BETWEEN b.datain AND b.dataout
+        AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
+        AND (CURDATE() BETWEEN b.datain AND b.dataout)
         AND ho.module NOT LIKE 'GUARDIA'
-        AND( WEEK(CURDATE()) < WEEK(b.dataout)
-                OR
-            ( WEEK(CURDATE()) = WEEK(b.dataout) AND DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout)))
-                AND( WEEK(CURDATE()) < WEEK(b.dataout) OR( WEEK(CURDATE()) = WEEK(b.dataout)
-            AND ho.dia <= DAYOFWEEK(b.dataout) -1 AND ho.dia >= DAYOFWEEK(CURDATE()) -1))
+        AND ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) OR WEEK(CURDATE()) < WEEK(b.dataout))
+        AND ho.dia >= (DAYOFWEEK(CURDATE()) -1)
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca;
     ");
+   //
        /*  $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho , baixes b
                                         where ho.profe = b.profe
                                                      and  CURDATE() BETWEEN b.datain and b.dataout
@@ -286,7 +296,7 @@ ORDER BY h.dia asc, h.hora asc;");
             $h = $dat->hora;
             if (isset($this->assig_a_cobrir[$h][$d])) {
                 $profes = $profes + 1;
-                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h . '-' . $dat->module . ' - ' . $dat->aula . '" name="' . $d . '-' . $h . '-' . $dat->module . ' - ' . $dat->aula . '" form="assignades"> <option selected=""></option> '; // <option selected=""></option>
+                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h . '-' . $dat->tasca. '-' . $dat->profe .'-' . $dat->module . ' - ' . $dat->aula . '" name="' . $d . '-' . $h . '-' . $dat->tasca .'-' . $dat->profe .'-' .$dat->module . ' - ' . $dat->aula . '" form="assignades"> <option selected=""></option> '; // <option selected=""></option>
                 foreach ($horas as $dato) {
                     if ($dato->dia == $d && $dato->hora == $h) {
                         if (isset($oldassig[$h][$d])) {
@@ -309,7 +319,7 @@ ORDER BY h.dia asc, h.hora asc;");
                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes] . '</select><label for="floatingSelect" style="color:red">' . $dat->module . ' / ' . $dat->aula. ' / ' . $dat->profe . '</label></div>';
                 $this->assig_a_cobrir[$h][$d] = $this->assig_a_cobrir[$h][$d] . '<br>' . $this->selector[$h][$d][$profes];
             } else {
-                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h . '-' . $dat->module . ' - ' . $dat->aula . '" name="' . $d . '-' . $h . '-' . $dat->module . ' - ' . $dat->aula . '" form="assignades"> <option selected=""></option>'; //  <option selected=""></option>
+                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h .'-' . $dat->tasca . '-' .  $dat->profe .'-' .$dat->module . ' - ' . $dat->aula . '" name="' . $d . '-' . $h .'-' . $dat->tasca . '-' . $dat->profe .'-' .$dat->module . ' - ' . $dat->aula . '" form="assignades"> <option selected=""></option>'; //  <option selected=""></option>
                 foreach ($horas as $dato) {
 
                     if ($dato->dia == $d && $dato->hora == $h) {
@@ -340,14 +350,14 @@ ORDER BY h.dia asc, h.hora asc;");
     public function parsea($asignats)
     {
         $asignats->collect()->each(function ($profe, $numitem) {
-            $extra = explode('-', $profe->modul, 3);
+            $extra = explode('-', $profe->modul, 5);
             $numprofe = 1;
             if (isset($this->asignados[$extra[1]][$extra[0]])) {
                 $numprofe = count($this->asignados[$extra[1]][$extra[0]]) + 1;
-                $this->asignados[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignados[$extra[1]][$extra[0]][$numprofe][0] = $extra[4];
                 $this->asignados[$extra[1]][$extra[0]][$numprofe][1] = $profe->profe;
             } else {
-                $this->asignados[$extra[1]][$extra[0]][$numprofe][0] = $extra[2];
+                $this->asignados[$extra[1]][$extra[0]][$numprofe][0] = $extra[4];
                 $this->asignados[$extra[1]][$extra[0]][$numprofe][1] = $profe->profe;
             }
         });
