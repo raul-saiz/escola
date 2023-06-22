@@ -1,5 +1,5 @@
 @extends('back.layouts.pages-layout')
-@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Baixes')
+@section('pageTitle', isset($pageTitle) ? $pageTitle : 'Absències')
 @section('content')
 
     <div class="container-x3">
