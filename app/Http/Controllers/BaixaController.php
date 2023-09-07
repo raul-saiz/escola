@@ -175,15 +175,17 @@ class BaixaController extends Controller
         ];
 
 
-        $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module, ho.aula, max(ho.profe) as profe , b.tasca FROM horaris_horario ho, baixes b
+        $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
         AND ho.module NOT LIKE '%TUT%'
+        AND ho.curso NOT LIKE 'GUARDIA%'
+        AND ho.aula NOT LIKE 'PROBLEM'
         AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
         AND (CURDATE() BETWEEN b.datain AND b.dataout)
-        AND ho.module NOT LIKE 'GUARDIA'
-        AND ( ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) AND (WEEK(CURDATE()) = WEEK(b.dataout)) ) OR WEEK(CURDATE()) < WEEK(b.dataout))
+        AND ( ho.module NOT LIKE 'GUARDIA%'  )
+        AND ( ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) AND (WEEK(CURDATE()) = WEEK(b.dataout)) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR WEEK(CURDATE()) < WEEK(b.dataout))
         AND ho.dia >= (DAYOFWEEK(CURDATE()) -1)
-        group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca;
+        group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
    //
        /*  $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho , baixes b

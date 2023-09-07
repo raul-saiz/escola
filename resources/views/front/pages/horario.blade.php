@@ -45,7 +45,7 @@
                                                 @endif
                                                 @if ($calendario[$h][$d] == '-')
                                                     <td class="sort-score">-</td>
-                                                @elseif ( Str::startsWith($calendario[$h][$d], '---') )
+                                                @elseif ( Str::startsWith($calendario[$h][$d], 'GUARDIA') )
                                                     <td class="sort-score">GUARDIA</td>
                                                 @else
                                                     <td class="sort-score">{!! $calendario[$h][$d] !!}</td>

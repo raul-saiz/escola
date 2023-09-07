@@ -23,7 +23,7 @@ class HorariController extends Controller
         return view('front.pages.profes', compact('users'));
     }
 
-    
+
     public function visualHorari($id)
     {
         $titulo_horas = [
@@ -55,8 +55,8 @@ class HorariController extends Controller
         $hora = $request->input('hora');
         $dia = $request->input('dia');
         $user = $request->input('id');
-        $aula = '---';
-        $curs = '---';
+        $aula = 'GUARDIA';
+        $curs = 'GUARDIA';
         $modul = 'GUARDIA';
 
         if ($request->has('add')) {
