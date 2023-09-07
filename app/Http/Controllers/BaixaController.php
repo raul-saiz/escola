@@ -277,7 +277,7 @@ LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.pro
         where ho.profe in ( select b.profe from baixes b
                        where CURDATE() BETWEEN b.datain and b.dataout)
                         AND ho.module NOT LIKE 'GUARDIA')
-AND module LIKE 'GUARDIA'
+AND ( module LIKE 'GUARDIA' OR module LIKE 'G' OR module LIKE 'GB' OR module LIKE 'G_M' OR module LIKE 'G_T' OR module LIKE 'G_B' OR module LIKE 'G1' )
 AND h.profe NOT IN (select b.profe from baixes b
                where CURDATE() BETWEEN b.datain and b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
