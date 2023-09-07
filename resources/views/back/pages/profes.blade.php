@@ -26,11 +26,11 @@
                   <tr>
                     <th><button class="table-sort" data-sort="sort-name">Nom</button></th>
                     <th><button class="table-sort" data-sort="sort-city">Nom Complet</button></th>
-                    <th><button class="table-sort" data-sort="sort-type">e-mail</button></th>
+                    {{-- <th><button class="table-sort" data-sort="sort-type">e-mail</button></th>
                     <th><button class="table-sort" data-sort="sort-score">Score</button></th>
                     <th><button class="table-sort" data-sort="sort-date">Date</button></th>
                     <th><button class="table-sort" data-sort="sort-quantity">Quantity</button></th>
-                    <th><button class="table-sort" data-sort="sort-progress">Progress</button></th>
+                    <th><button class="table-sort" data-sort="sort-progress">Progress</button></th> --}}
                   </tr>
                 </thead>
                 <tbody class="table-tbody">
@@ -39,7 +39,7 @@
                     <tr>
                         <td class="sort-name"><a href="{{ route('profe.horario',$user->nom_c) }}">{{  $user->nom_c }}</a></td>
                         <td class="sort-city">{{  $user->nom_l }}</td>
-                        <td class="sort-type">RMC Hybrid</td>
+                        {{-- <td class="sort-type">RMC Hybrid</td>
                         <td class="sort-score">100,0%</td>
                         <td class="sort-date" data-date="1628071164">August 04, 2021</td>
                         <td class="sort-quantity">74</td>
@@ -54,7 +54,7 @@
                               </div>
                             </div>
                           </div>
-                        </td>
+                        </td> --}}
                       </tr>
 
                 @endforeach

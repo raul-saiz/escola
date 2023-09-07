@@ -181,7 +181,7 @@ class BaixaController extends Controller
         AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
         AND (CURDATE() BETWEEN b.datain AND b.dataout)
         AND ho.module NOT LIKE 'GUARDIA'
-        AND ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) OR WEEK(CURDATE()) < WEEK(b.dataout))
+        AND ( ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) AND (WEEK(CURDATE()) = WEEK(b.dataout)) ) OR WEEK(CURDATE()) < WEEK(b.dataout))
         AND ho.dia >= (DAYOFWEEK(CURDATE()) -1)
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca;
     ");
