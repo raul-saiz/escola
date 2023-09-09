@@ -63,7 +63,7 @@
                                                         </form>
                                                     </td>
                                                 @elseif ( Str::startsWith($calendario[$h][$d], '---') )
-                                                    <td class="sort-score">GUARD
+                                                    <td class="sort-score">GUARDIA
                                                         <form method="post"
                                                             action="{{ route('profe.horario', $user->nom_c) . '/add' }}">
                                                             <input type="hidden" name="_token"

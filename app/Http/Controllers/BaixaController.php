@@ -81,14 +81,26 @@ class BaixaController extends Controller
 
     public function salvaguardies(Request $request)
     {
+
         $week  = date('W', strtotime(now()));
+        $day  = date('w', strtotime(now()));
+        //dd($week,$day);
+        if ( $day > 5) {
+            $week  = date('W', strtotime("sunday 1 week"));
+            $day  = "1";
+        }
         Asignacio::where('semana', $week)->delete();
         $input = $request->collect();
 
 //dd($input);
         $input->each(function ($profe, $modul) {
             $week  = date('W', strtotime(now()));
-
+            $day  = date('w', strtotime(now()));
+            //dd($week,$day);
+            if ( $day > 5) {
+                $week  = date('W', strtotime("sunday 1 week"));
+                $day  = "1";
+            }
 
             if (is_numeric($modul[0]) && isset($profe)) {
                // dd($modul);
@@ -111,6 +123,8 @@ class BaixaController extends Controller
     {
         $week  = date('W', strtotime(now()));
         $day  = date('w', strtotime(now()));
+
+        //dd($day);
         $assig_a_cobrir = DB::select("select * from asignades where semana =".$week." AND modul LIKE '".$day."-%'");
 
         //dd($assig_a_cobrir);
@@ -158,8 +172,14 @@ class BaixaController extends Controller
 
     public function guardies()
     {
-
         $week  = date('W', strtotime(now()));
+        $day  = date('w', strtotime(now()));
+        //dd($week,$day);
+        if ( $day > 5) {
+            $week  = date('W', strtotime("sunday 1 week"));
+            $day  = "1";
+        }
+       // dd($week,$day);
         $consulta = array("semana" => $week);
         $asignats = Asignacio::where($consulta)->get();
 
@@ -178,15 +198,27 @@ class BaixaController extends Controller
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
         AND ho.module NOT LIKE '%TUT%'
-        AND ho.curso NOT LIKE 'GUARDIA%'
+        AND ( ho.curso NOT LIKE 'GUARDIA%' OR ho.module NOT LIKE 'GUARDIA%' OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1')
         AND ho.aula NOT LIKE 'PROBLEM'
         AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
         AND (CURDATE() BETWEEN b.datain AND b.dataout)
-        AND ( ho.module NOT LIKE 'GUARDIA%'  )
-        AND ( ( DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) AND (WEEK(CURDATE()) = WEEK(b.dataout)) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR WEEK(CURDATE()) < WEEK(b.dataout))
-        AND ho.dia >= (DAYOFWEEK(CURDATE()) -1)
+        AND (  ".$day." <= DAYOFWEEK(b.dataout) AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout)
+        AND ho.dia >= ".$day."-1)
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
+  /*   $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
+    WHERE ho.profe = b.profe
+    AND ho.module NOT LIKE '%TUT%'
+    AND ( ho.curso NOT LIKE 'GUARDIA%' OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1')
+    AND ho.aula NOT LIKE 'PROBLEM'
+    AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
+    AND (CURDATE() BETWEEN b.datain AND b.dataout)
+    AND ( ho.module NOT LIKE 'GUARDIA%'  )
+    AND ( (DAYOFWEEK(CURDATE()) <= DAYOFWEEK(b.dataout) AND (WEEK(CURDATE()) = WEEK(b.dataout)) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR WEEK(CURDATE()) < WEEK(b.dataout))
+    AND ho.dia >= (DAYOFWEEK(CURDATE()) -1)
+    group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
+"); */
+
    //
        /*  $assig_a_cobrir = DB::select("select DISTINCT ho.dia, ho.hora ,ho.module , ho.aula, ho.profe from horaris_horario ho , baixes b
                                         where ho.profe = b.profe
@@ -276,7 +308,7 @@ LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.pro
  where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
                        where CURDATE() BETWEEN b.datain and b.dataout)
-                        AND ho.module NOT LIKE 'GUARDIA')
+                        AND ho.module NOT LIKE 'GUARDIA' OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1')
 AND ( module LIKE 'GUARDIA' OR module LIKE 'G' OR module LIKE 'GB' OR module LIKE 'G_M' OR module LIKE 'G_T' OR module LIKE 'G_B' OR module LIKE 'G1' )
 AND h.profe NOT IN (select b.profe from baixes b
                where CURDATE() BETWEEN b.datain and b.dataout)
@@ -311,6 +343,8 @@ ORDER BY h.dia asc, h.hora asc;");
                             }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
                                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                            }else {
+                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
                             }
                         }
                         } else {
@@ -332,9 +366,11 @@ ORDER BY h.dia asc, h.hora asc;");
                                 if ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
 
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
-                                }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
+                                } elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                                }else {
+                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
                                 }
                             }
                         } else {
