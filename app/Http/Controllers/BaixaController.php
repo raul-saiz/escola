@@ -205,9 +205,9 @@ class BaixaController extends Controller
         AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G_B' AND ho.module NOT LIKE 'G1' )
         AND  ho.curso NOT LIKE 'GUARDIA%'
         AND ho.aula NOT LIKE 'PROBLEM'
-        AND ( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN ( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN ( SELECT profe FROM baixes ))
-        AND (CURDATE() BETWEEN b.datain AND b.dataout)
-        AND ((  ".$day." <= DAYOFWEEK(b.dataout) AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout) AND ho.dia >= ".$day."-1))
+        AND ( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN ( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN ( SELECT DISTINCT  profe FROM baixes ))
+        AND (CURDATE() BETWEEN b.datain AND b.dataout) AND ( ho.dia <= DAYOFWEEK(b.dataout)-1 )
+        AND ((  ".$day." <= DAYOFWEEK(b.dataout)-1 AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout) AND ho.dia >= ".$day."-1))
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
 //
@@ -348,9 +348,9 @@ ORDER BY h.dia asc, h.hora asc;");
                             }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
                                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
-                            }else {
+                            } /* else {
                                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
-                            }
+                            } */
                         }
                         } else {
                             $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
@@ -374,7 +374,7 @@ ORDER BY h.dia asc, h.hora asc;");
                                 } elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) || $oldassig[$h][$d][$i][1] == $dato->profe) {
 
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
-                                }else {
+                                } else {
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
                                 }
                             }
