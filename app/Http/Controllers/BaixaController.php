@@ -93,7 +93,7 @@ class BaixaController extends Controller
         $input = $request->collect();
 
 //dd($input);
-        $input->each(function ($profe, $modul) {
+         $input->each(function ($profe, $modul) {
             $week  = date('W', strtotime(now()));
             $day  = date('w', strtotime(now()));
             //dd($week,$day);
@@ -123,6 +123,11 @@ class BaixaController extends Controller
     {
         $week  = date('W', strtotime(now()));
         $day  = date('w', strtotime(now()));
+        //dd($week,$day);
+        if ( $day > 5) {
+            $week  = date('W', strtotime("sunday 1 week"));
+            $day  = "1";
+        }
 
         //dd($day);
         $assig_a_cobrir = DB::select("select * from asignades where semana =".$week." AND modul LIKE '".$day."-%'");
@@ -172,7 +177,7 @@ class BaixaController extends Controller
 
     public function guardies()
     {
-        $week  = date('W', strtotime(now()));
+       $week  = date('W', strtotime(now()));
         $day  = date('w', strtotime(now()));
         //dd($week,$day);
         if ( $day > 5) {
@@ -197,15 +202,16 @@ class BaixaController extends Controller
 
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
-        AND ho.module NOT LIKE '%TUT%'
-        AND ( ho.curso NOT LIKE 'GUARDIA%' OR ho.module NOT LIKE 'GUARDIA%' OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1')
+        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G_B' AND ho.module NOT LIKE 'G1' )
+        AND  ho.curso NOT LIKE 'GUARDIA%'
         AND ho.aula NOT LIKE 'PROBLEM'
-        AND( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN(SELECT profe FROM baixes))
+        AND ( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN ( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN ( SELECT profe FROM baixes ))
         AND (CURDATE() BETWEEN b.datain AND b.dataout)
-        AND (  ".$day." <= DAYOFWEEK(b.dataout) AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout)
-        AND ho.dia >= ".$day."-1)
+        AND ((  ".$day." <= DAYOFWEEK(b.dataout) AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout) AND ho.dia >= ".$day."-1))
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
+//
+
   /*   $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
     WHERE ho.profe = b.profe
     AND ho.module NOT LIKE '%TUT%'
@@ -304,17 +310,16 @@ ORDER BY h.dia asc, h.hora asc;
  */
 $profes_baixa = DB::select("SELECT DISTINCT h.dia, h.hora, h.profe, IFNULL(otra.cnt,0) as fetes from horaris_horario h
 LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.profe ) otra
- ON h.profe = otra.profe
- where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
+ON h.profe = otra.profe
+where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
                        where CURDATE() BETWEEN b.datain and b.dataout)
-                        AND ho.module NOT LIKE 'GUARDIA' OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1')
-AND ( module LIKE 'GUARDIA' OR module LIKE 'G' OR module LIKE 'GB' OR module LIKE 'G_M' OR module LIKE 'G_T' OR module LIKE 'G_B' OR module LIKE 'G1' )
-AND h.profe NOT IN (select b.profe from baixes b
-               where CURDATE() BETWEEN b.datain and b.dataout)
+                        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB'))
+AND  ( h.module LIKE 'GUARDIA'  OR h.module LIKE 'G1' OR h.module LIKE 'G' OR h.module LIKE 'G_M' )
+AND h.profe NOT IN (select b.profe from baixes b where CURDATE() BETWEEN b.datain and b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
 
-
+// OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1'
         $this->creaGuardies($profes_baixa, $assig_a_cobrir, $this->asignados);
         $profes_baixa = $this->profes_baixa;
         $assig_a_cobrir = $this->assig_a_cobrir;
