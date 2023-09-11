@@ -351,18 +351,26 @@ ORDER BY h.dia asc, h.hora asc;");
 
                         if (isset($oldassig[$h][$d])) {
 
-                        $i=1;//for ($i = 1; $i <=  sizeof($oldassig[$h][$d]); $i++) {
+                            //$i=1;
+                        for ($i = 1; $i <=  sizeof($oldassig[$h][$d]); $i++) {
 
                             if ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
-
-                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
+                                $texto ='<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
+                                if(strpos($this->selector[$h][$d][$profes], $texto) === false){
+                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . $texto;
+                                }
                             }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] != $dato->profe) {
-
-                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                                $texto ='<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                                if(strpos($this->selector[$h][$d][$profes], $texto) === false){
+                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . $texto;
+                                }
                             }  else {
-                                $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                                $texto = '<option  value="' . $dato->profe . '" >'. $dato->profe .' ('. $dato->fetes.')'. '</option>';
+                                if(strpos($this->selector[$h][$d][$profes], $texto) === false){
+                                    $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . $texto;
+                                }
                             }
-                        //}
+                        }
 
                          }
                         else {
