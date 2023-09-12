@@ -74,7 +74,13 @@ class BaixaController extends Controller
 
         if ($request->has('delete')) {
             $data = array("profe" => $user);
+            $week  = date('W', strtotime(now()));
             Baixa::where($data)->delete();
+            DB::table("asignades")
+                ->where('modul','LIKE','%'.$user.'%')
+                ->where('semana', '>=', $week)
+                ->delete();
+
         }
         return Redirect::to($request->get('http_referrer') . '/profe/baixes');
     }
@@ -216,7 +222,7 @@ class BaixaController extends Controller
     ");
     //
     //
-// AND ( ho.dia, ho.hora, ho.module, ho.aula ) NOT IN ( SELECT ho2.dia, ho2.hora, ho2.module, ho2.aula FROM horaris_horario ho2 WHERE ho2.profe NOT IN ( SELECT DISTINCT  profe FROM baixes where CURDATE() BETWEEN datain and dataout))
+//
 // AND (CURDATE() < b.dataout) AND ( ho.dia <= DAYOFWEEK(b.dataout)-1 )
 //         AND ((  ".$day." <= DAYOFWEEK(b.dataout)-1 AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout) AND ho.dia >= ".$day."-1))
 
