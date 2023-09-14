@@ -62,7 +62,7 @@
 
                                                         </form>
                                                     </td>
-                                                @elseif ( Str::startsWith($calendario[$h][$d], '---') )
+                                                @elseif ( Str::startsWith($calendario[$h][$d], 'GUA') )
                                                     <td class="sort-score">GUARDIA
                                                         <form method="post"
                                                             action="{{ route('profe.horario', $user->nom_c) . '/add' }}">

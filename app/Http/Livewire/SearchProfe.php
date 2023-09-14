@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class SearchProfe extends Component
 {
@@ -16,8 +17,11 @@ class SearchProfe extends Component
     {
 
         // sleep(1);
-
-        $users = User::search('nom_c',$this->term)->paginate(10);
+        $users =DB::table("users")
+        ->search('nom_l',$this->term)
+        ->paginate(10);
+//dd($users);
+        //$users = User::search('nom_c',$this->term)->paginate(10);
 
         $data = [
             'users' => $users,

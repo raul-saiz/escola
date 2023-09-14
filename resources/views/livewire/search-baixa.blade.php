@@ -9,7 +9,7 @@
 
             @if ($term == '')
                 <div class="text-gray-500 text-sm">
-                    MODIFICACIO BAIXA : Introdueix el identificador professor a buscar.
+                    MODIFICACIO BAIXA : Introdueix el IDENTIFICADOR MAIL de professor de la següent LLISTA .
                 </div>
             @else
                 <div id="table-default" class="table-responsive">

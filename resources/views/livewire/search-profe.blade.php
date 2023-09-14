@@ -10,7 +10,7 @@
 
             @if ($term == '')
                 <div class="text-gray-500 text-sm">
-                    NOVA BAIXA : Introdueix el identificador professor a buscar.
+                    NOVA BAIXA : Introdueix el COGNOM ( o primeres lletres ) del professor a buscar.
                 </div>
             @else
                 <div id="table-default" class="table-responsive">
