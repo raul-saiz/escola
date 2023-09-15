@@ -208,7 +208,7 @@ class BaixaController extends Controller
 
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
-        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA%' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G_B' AND ho.module NOT LIKE 'G1' )
+        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA%' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G_B' AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'G+55')
         AND  ho.curso NOT LIKE 'GUARDIA%'
         AND ho.aula NOT LIKE 'PROBLEM'
         AND (
@@ -328,8 +328,8 @@ ON h.profe = otra.profe
 where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
                        where week(CURDATE()) BETWEEN week(b.datain) and week(b.dataout) )
-        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G1'AND ho.module NOT LIKE 'G_M'))
-AND  ( h.module LIKE 'GUARDIA'  OR h.module LIKE 'G1' OR h.module LIKE 'G' OR h.module LIKE 'G_M' OR h.module LIKE 'GUARDIA%' OR h.module LIKE 'GB' OR h.module LIKE 'G_T')
+        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G1'AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G+55'))
+AND  ( h.module LIKE 'GUARDIA'  OR h.module LIKE 'G1' OR h.module LIKE 'G' OR h.module LIKE 'G_M' OR h.module LIKE 'GUARDIA%' OR h.module LIKE 'GB' OR h.module LIKE 'G_T' OR h.module LIKE 'G+55')
 AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
 
