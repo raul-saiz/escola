@@ -66,7 +66,7 @@ class AuthorController extends Controller
 
         $this->creaCalendar($horas);
         $calendario = $this->calendario;
-
+      
         return view('back.pages.horario', compact('user', 'horas', 'calendario', 'titulo_horas'));
     }
 
