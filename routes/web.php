@@ -24,9 +24,9 @@ Route::match(['get', 'post'],'/', function () {
     return view('welcome');
 });
 
-Route::get('/sendbasicemail', [MailController::class, 'basic_email']);
-Route::get('/sendhtmlemail', [MailController::class, 'html_email']);
-Route::get('/sendattachmentemail', [MailController::class, 'attachment_email']);
+//Route::get('/sendbasicemail', [MailController::class, 'basic_email']);
+//Route::get('/sendhtmlemail', [MailController::class, 'html_email']);
+//Route::get('/sendattachmentemail', [MailController::class, 'attachment_email']);
 // Route::get('sendbasicemail','MailController@basic_email');
 // Route::get('sendhtmlemail','MailController@html_email');
 // Route::get('sendattachmentemail','MailController@attachment_email');

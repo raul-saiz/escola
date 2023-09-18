@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Baixa;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Asignacio;
-
+use App\Models\Mailsender;
 use Illuminate\Support\Facades\DB;
 
 class BaixaController extends Controller
@@ -110,7 +110,7 @@ class BaixaController extends Controller
 
             if (is_numeric($modul[0]) && isset($profe)) {
                // dd($modul);
-               $extra = explode('-', $modul, 5);
+               $extra = explode('-', $modul, 6);
               // dd($extra);
                $tasca = $extra[2];
 
@@ -118,6 +118,40 @@ class BaixaController extends Controller
                         ['semana' => $week, 'modul' => $modul],
                         ['profe' => $profe, 'tasca' => $tasca]
                     );
+
+                    if ( ! DB::table('mailsenviados')->where('semana',$week)
+                            ->where('modul',$modul)
+                            ->where('profe',$profe)
+                            ->where('tasca',$tasca)->exists() ){
+
+                              DB::table('mailsenviados')
+                              ->where('modul',$modul)
+                              ->delete();
+
+                              Mailsender::Create(
+                                ['semana' => $week, 'modul' => $modul,'profe' => $profe, 'tasca' => $tasca]
+                            );
+
+                            $diasemana = [ '1'=>'Dilluns', '2'=>'Dimarts', '3'=>'Dimecres', '4'=>'Dijous', '5'=>'Divendres'];
+                            $titulo_horas = [
+                                '1' =>'8h-9h', '2' =>'9h-10h', '3' =>'10h-11h',
+                                '4' =>'11h-11.30h',
+                                '5' =>'11.30h-12.30h', '6' =>'12.30h-13.30h', '7' =>'13.30h-14.30h',
+                                '8' =>'15h-16h', '9' =>'16h-17h', '10' =>'17h-18h',
+                                '11' =>'18h-18.30h',
+                                '12' =>'18.30h-19.30', '13' =>'19.30h-20.30h', '14' =>'20.30h-21.30h'
+                            ];
+
+                            //$auxdia = $diasemana[($extra[0])];
+
+//$data = array('profe' => $profe.'@xtec.cat', 'modul'=> $extra[4], 'aula' => $extra[5], 'hora' => $extra[1], 'dia' => $auxdia, 'tasca' => $extra[2]);
+
+                            $data = array('profe' => $profe.'@xtec.cat', 'modul'=> $extra[4], 'aula' => $extra[5], 'hora' => $titulo_horas[$extra[1]], 'dia' => $diasemana[$extra[0]], 'tasca' => $extra[2]);
+//dd($data);
+                             $result = app('App\Http\Controllers\MailController')->html_email($data);
+
+
+                            }
 
 
             }

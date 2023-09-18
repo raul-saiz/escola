@@ -1,2 +1,6 @@
-<h1>Hi, {{ $name }}</h1>
-l<p>Sending Mail from Laravel.</p>
+
+<h1>Nova asignació / modificació de Guardia: </h1>
+<h2> DIA : {{ $dia }} </h2>
+<h2> HORA : {{ $hora }} </h2>
+<h2> AULA : {{ $aula }} </h2>
+<h2> MODUL : {{ $modul }} </h2>
