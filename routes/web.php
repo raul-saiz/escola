@@ -6,6 +6,7 @@ use \App\Http\Controllers\AlumneController;
 use \App\Http\Controllers\HorariController;
 use \App\Http\Controllers\MatriculaController;
 use \App\Http\Controllers\BaixaController;
+use \App\Http\Controllers\MailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,7 +24,12 @@ Route::match(['get', 'post'],'/', function () {
     return view('welcome');
 });
 
-
+Route::get('/sendbasicemail', [MailController::class, 'basic_email']);
+Route::get('/sendhtmlemail', [MailController::class, 'html_email']);
+Route::get('/sendattachmentemail', [MailController::class, 'attachment_email']);
+// Route::get('sendbasicemail','MailController@basic_email');
+// Route::get('sendhtmlemail','MailController@html_email');
+// Route::get('sendattachmentemail','MailController@attachment_email');
 
 //Route::get('/alumnes',[AlumneController::class,'alumnes'])->name('alumnes');
 
