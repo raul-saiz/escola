@@ -111,7 +111,7 @@ class BaixaController extends Controller
             if (is_numeric($modul[0]) && isset($profe)) {
                // dd($modul);
                $extra = explode('-', $modul, 6);
-              // dd($extra);
+               //dd($extra);
                $tasca = $extra[2];
 
                     Asignacio::updateOrCreate(
@@ -242,8 +242,8 @@ class BaixaController extends Controller
 
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
-        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA%' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G_B' AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'G+55')
-        AND  ho.curso NOT LIKE 'GUARDIA%'
+        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA%' AND ho.module NOT LIKE 'G\_%' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G1'  AND ho.module NOT LIKE 'G+55')
+        AND ( ho.curso NOT LIKE 'GUARDIA%')
         AND ho.aula NOT LIKE 'PROBLEM'
         AND (
             ( WEEK(b.datain) = WEEK(CURDATE()) AND WEEK(b.dataout) = WEEK(CURDATE()) AND ho.dia BETWEEN WEEKDAY(b.datain)+1 AND WEEKDAY(b.dataout)+1)
@@ -255,7 +255,7 @@ class BaixaController extends Controller
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
     //
-    //
+    //  AND ho.curso NOT LIKE 'GUARDIA%' AND ho.curso NOT LIKE 'G_%' AND ho.curso NOT LIKE 'GB_%' AND ho.curso NOT LIKE 'G1'  AND ho.curso NOT LIKE 'G+55'
 //
 // AND (CURDATE() < b.dataout) AND ( ho.dia <= DAYOFWEEK(b.dataout)-1 )
 //         AND ((  ".$day." <= DAYOFWEEK(b.dataout)-1 AND (".$week.") = WEEK(b.dataout) AND ho.dia <= DAYOFWEEK(b.dataout)-1 ) OR ( ".$week." < WEEK(b.dataout) AND ho.dia >= ".$day."-1))
@@ -362,8 +362,8 @@ ON h.profe = otra.profe
 where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
                        where week(CURDATE()) BETWEEN week(b.datain) and week(b.dataout) )
-        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' AND ho.module NOT LIKE 'G_T' AND ho.module NOT LIKE 'G1'AND ho.module NOT LIKE 'G_M' AND ho.module NOT LIKE 'G+55'))
-AND  ( h.module LIKE 'GUARDIA'  OR h.module LIKE 'G1' OR h.module LIKE 'G' OR h.module LIKE 'G_M' OR h.module LIKE 'GUARDIA%' OR h.module LIKE 'GB' OR h.module LIKE 'G_T' OR h.module LIKE 'G+55')
+        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G\_%'AND ho.module NOT LIKE 'G+55'))
+AND  ( h.module LIKE 'GUARDIA%'  OR h.module LIKE 'G1' OR h.module LIKE 'G\_%'  OR h.module LIKE 'GB\_%' OR h.module LIKE 'G+55')
 AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
 
@@ -383,7 +383,7 @@ ORDER BY h.dia asc, h.hora asc;");
             $h = $dat->hora;
             if (isset($this->assig_a_cobrir[$h][$d])) {
                 $profes = $profes + 1;
-                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h . '-' . $dat->tasca. '-' . $dat->profe .'-' . $dat->module . ' - ' . $dat->aula  . '" name="' . $d . '-' . $h . '-' . $dat->tasca .'-' . $dat->profe .'-' .$dat->module . ' - ' . $dat->aula .'" form="assignades"> <option selected=""></option> '; // <option selected=""></option>
+                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h . '-' . $dat->tasca. '-' . $dat->profe .'-' . $dat->module . '-' . $dat->aula  . '" name="' . $d . '-' . $h . '-' . $dat->tasca .'-' . $dat->profe .'-' .$dat->module . '-' . $dat->aula .'" form="assignades"> <option selected=""></option> '; // <option selected=""></option>
                 //$unavez = true;
                 foreach ($horas as $dato) {
                     if ($dato->dia == $d && $dato->hora == $h ) {
@@ -394,12 +394,12 @@ ORDER BY h.dia asc, h.hora asc;");
                             //$i=1;
                         for ($i = 1; $i <=  sizeof($oldassig[$h][$d]); $i++) {
 
-                            if ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
+                            if ($oldassig[$h][$d][$i][0] == ($dat->module . '-' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
                                 $texto ='<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
                                 if(strpos($this->selector[$h][$d][$profes], $texto) === false){
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . $texto;
                                 }
-                            }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] != $dato->profe) {
+                            }  elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '-' . $dat->aula) && $oldassig[$h][$d][$i][1] != $dato->profe) {
                                 $texto ='<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
                                 if(strpos($this->selector[$h][$d][$profes], $texto) === false){
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . $texto;
@@ -423,7 +423,7 @@ ORDER BY h.dia asc, h.hora asc;");
                 $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes] . '</select><label for="floatingSelect" style="color:red">' . $dat->module . ' / ' . $dat->aula. ' / ' . $dat->profe . '</label></div>';
                 $this->assig_a_cobrir[$h][$d] = $this->assig_a_cobrir[$h][$d] . '<br>' . $this->selector[$h][$d][$profes];
             } else {
-                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h .'-' . $dat->tasca . '-' .  $dat->profe .'-' .$dat->module . ' - ' . $dat->aula . '" name="' . $d . '-' . $h .'-' . $dat->tasca . '-' . $dat->profe .'-' .$dat->module . ' - ' . $dat->aula . '" form="assignades"> <option selected=""></option>'; //  <option selected=""></option>
+                $this->selector[$h][$d][$profes] = '<div class="form-floating"> <select class="form-select" id="' . $d . '-' . $h .'-' . $dat->tasca . '-' .  $dat->profe .'-' .$dat->module . '-' . $dat->aula . '" name="' . $d . '-' . $h .'-' . $dat->tasca . '-' . $dat->profe .'-' .$dat->module . '-' . $dat->aula . '" form="assignades"> <option selected=""></option>'; //  <option selected=""></option>
                 foreach ($horas as $dato) {
 
                     if ($dato->dia == $d && $dato->hora == $h) {
@@ -431,10 +431,10 @@ ORDER BY h.dia asc, h.hora asc;");
 
                             $i=1; // for ($i = 1; $i <= sizeof($oldassig[$h][$d]); $i++) {
 
-                                if ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
+                                if ($oldassig[$h][$d][$i][0] == ($dat->module . '-' . $dat->aula) && $oldassig[$h][$d][$i][1] == $dato->profe) { //&& $oldassig[$h][$d][$i][1] == $dato->profe
 
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $oldassig[$h][$d][$i][1] . '" selected="" >' . $oldassig[$h][$d][$i][1] . '</option>';
-                                } elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '_-_' . $dat->aula) && $oldassig[$h][$d][$i][1] != $dato->profe) {
+                                } elseif ($oldassig[$h][$d][$i][0] == ($dat->module . '-' . $dat->aula) && $oldassig[$h][$d][$i][1] != $dato->profe) {
 
                                     $this->selector[$h][$d][$profes] = $this->selector[$h][$d][$profes]  . '<option  value="' . $dato->profe . '" >' . $dato->profe .' ('. $dato->fetes.')'. '</option>';
                                 }  else {

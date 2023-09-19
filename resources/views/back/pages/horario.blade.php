@@ -63,10 +63,10 @@
                                                         </form>
                                                     </td>
                                                 @elseif ( Str::startsWith($calendario[$h][$d], 'GUA') || Str::contains($calendario[$h][$d], 'G1<br>')
-                                                              || Str::contains($calendario[$h][$d], 'G_')   || Str::startsWith($calendario[$h][$d], 'GT<br>')
-                                                              || Str::contains($calendario[$h][$d], 'GM<br>')  || Str::contains($calendario[$h][$d], 'G+55')
-                                                              || Str::contains($calendario[$h][$d], 'GB<br>')
-                                                              || Str::startsWith($calendario[$h][$d], 'G<br>')
+                                                              || Str::contains($calendario[$h][$d], 'G_')
+                                                              
+                                                              || Str::contains($calendario[$h][$d], 'GB_') || Str::contains($calendario[$h][$d], 'G+55')
+
                                                        )
                                                     <td class="sort-score">GUARDIA
                                                         <form method="post"

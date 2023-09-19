@@ -24,7 +24,7 @@ class MailController extends Controller {
       Mail::send('mail', $data, function($message) {
          $message->to($this->dades, 'Prefectura ViB ')->subject
             ('Asignació i/o modificació de guardia');
-         $message->from('noreply@gmail.com','NO REPLY Prefectura');
+        // $message->from('no-reply@gmail.com','NO REPLY Prefectura');
       });
 
    }
