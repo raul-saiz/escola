@@ -23,7 +23,7 @@ class MailController extends Controller {
       $data = array('modul'=>$guardia['modul'], 'aula' => $guardia['aula'], 'hora' => $guardia['hora'], 'dia' =>$guardia['dia'], 'tasca' =>$guardia['tasca']);
       Mail::send('mail', $data, function($message) {
          $message->to($this->dades, 'Prefectura ViB ')->subject
-            ('Asignació i/o modificació de guardia');
+            ('Assignació i/o modificació de guardia');
         // $message->from('no-reply@gmail.com','NO REPLY Prefectura');
       });
 

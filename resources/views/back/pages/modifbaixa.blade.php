@@ -65,6 +65,32 @@
                     <input type='submit' value="Esborrar Absència" name="delete"/>
                 </td>
             </tr>
+            <tr> <td>
+                </td>
+            </tr>
+            <tr>  <td>
+            </td></tr>
+            <tr>
+                <td>NOM COMPLET ( Cognom Cognom , Nom ): </td>
+
+                <td><input  name="newprofe" >
+                    <input type="hidden" name="profe" value={{ $data['profe']  }}>
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>MAIL ID ( SENSE @XTEC.CAT): </td>
+
+                <td><input  name="mail" ></td>
+
+
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' value="Canvi de Profe" name="chg"/>
+                </td>
+            </tr>
         </table>
 
 

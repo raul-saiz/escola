@@ -54,6 +54,8 @@ class BaixaController extends Controller
         $in = $request->input('in');
         $user = $request->input('profe');
         $tasca = $request->input('tasca');
+        $idmail = $request->input('mail');
+        $newprofe = $request->input('newprofe');
 
         if ($request->has('add')) {
             Baixa::updateOrCreate(
@@ -82,6 +84,26 @@ class BaixaController extends Controller
                 ->delete();
 
         }
+
+        if ($request->has('chg')) {
+
+            if ( $newprofe == null || $idmail == null) {
+
+            }else{
+                $data = array("profe" => $user);
+                $week  = date('W', strtotime(now()));
+                Baixa::where($data)->delete();
+                DB::table("asignades")
+                    ->where('modul','LIKE','%'.$user.'%')
+                    ->delete();
+                DB::select("UPDATE users SET nom_c = '".$idmail."' , nom_l = '".$newprofe."' , email = '".$idmail."@xtec.cat'  WHERE nom_c = '".$user."';");
+                DB::select("UPDATE horaris_horario SET profe = '".$idmail."' WHERE profe = '".$user."';");
+
+            }
+
+        }
+
+
         return Redirect::to($request->get('http_referrer') . '/profe/baixes');
     }
 
@@ -242,8 +264,8 @@ class BaixaController extends Controller
 
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
-        AND ( ho.module NOT LIKE '%TUT%' AND ho.module NOT LIKE 'GUARDIA%' AND ho.module NOT LIKE 'G\_%' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G1'  AND ho.module NOT LIKE 'G+55')
-        AND ( ho.curso NOT LIKE 'GUARDIA%')
+        AND ( ho.module NOT LIKE 'TU' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' )
+        AND ( ho.curso NOT LIKE 'GUARDIA' AND ho.curso NOT LIKE 'G')
         AND ho.aula NOT LIKE 'PROBLEM'
         AND (
             ( WEEK(b.datain) = WEEK(CURDATE()) AND WEEK(b.dataout) = WEEK(CURDATE()) AND ho.dia BETWEEN WEEKDAY(b.datain)+1 AND WEEKDAY(b.dataout)+1)
@@ -254,7 +276,7 @@ class BaixaController extends Controller
         )
         group by ho.dia,ho.hora,ho.module,ho.aula,b.tasca,ho.curso;
     ");
-    //
+    //    AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G1'  AND ho.module NOT LIKE 'G+55')
     //  AND ho.curso NOT LIKE 'GUARDIA%' AND ho.curso NOT LIKE 'G_%' AND ho.curso NOT LIKE 'GB_%' AND ho.curso NOT LIKE 'G1'  AND ho.curso NOT LIKE 'G+55'
 //
 // AND (CURDATE() < b.dataout) AND ( ho.dia <= DAYOFWEEK(b.dataout)-1 )
@@ -362,11 +384,12 @@ ON h.profe = otra.profe
 where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horario ho
         where ho.profe in ( select b.profe from baixes b
                        where week(CURDATE()) BETWEEN week(b.datain) and week(b.dataout) )
-        AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G\_%'AND ho.module NOT LIKE 'G+55'))
-AND  ( h.module LIKE 'GUARDIA%'  OR h.module LIKE 'G1' OR h.module LIKE 'G\_%'  OR h.module LIKE 'GB\_%' OR h.module LIKE 'G+55')
+        AND ( ho.module NOT LIKE 'G'  AND ho.module NOT LIKE 'GB' AND ho.curso NOT LIKE 'GUARDIA' ))
+AND  ( h.module LIKE 'G'  OR h.module LIKE 'GB' )
 AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
-
+// AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G\_%'AND ho.module NOT LIKE 'G+55'))
+//OR h.module LIKE 'G\_%'  OR h.module LIKE 'GB\_%' OR h.module LIKE 'G+55')
 // OR ho.module NOT LIKE 'G' OR ho.module NOT LIKE 'GB' OR ho.module NOT LIKE 'G_M' OR ho.module NOT LIKE 'G_T' OR ho.module NOT LIKE 'G_B' OR ho.module NOT LIKE 'G1'
         $this->creaGuardies($profes_baixa, $assig_a_cobrir, $this->asignados);
         $profes_baixa = $this->profes_baixa;
