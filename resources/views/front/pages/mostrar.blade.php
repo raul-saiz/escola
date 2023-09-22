@@ -29,6 +29,7 @@
                                         <th><button class="table-sort" >Profe</button></th>
                                         <th><button class="table-sort" >Aula</button></th>
                                         <th><button class="table-sort" >Tasca</button></th>
+                                        <th><button class="table-sort" >Grup</button></th>
                                         <th><button class="table-sort" >Mòdul</button></th>
                                     </tr>
                                 </thead>
@@ -50,6 +51,7 @@
                                                                 <td>{{ $asignados[$h][$d] [$i] [1]}}</td>
                                                                 <td>{{ $asignados[$h][$d] [$i] [3]}}</td>
                                                                 <td>{{ $asignados[$h][$d] [$i] [2]}}</td>
+                                                                <td>{{ $asignados[$h][$d] [$i] [4]}}</td>
                                                                 <td>{{ $asignados[$h][$d] [$i] [0]}}</td>
                                                                 @if($i >1)
                                                                     </tr>
