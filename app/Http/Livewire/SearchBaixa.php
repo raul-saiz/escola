@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Baixa;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class SearchBaixa extends Component
 {
@@ -17,7 +18,7 @@ class SearchBaixa extends Component
 
         // sleep(1);
 
-        $users = Baixa::search('profe',$this->term)->paginate(10);
+        $users =DB::table("baixes")->search('profe',$this->term)->paginate(35);
 
         $data = [
             'users' => $users,

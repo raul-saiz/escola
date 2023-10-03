@@ -44,9 +44,9 @@
             </div>
         </div>
         <div>
-            @if (isset($users))
-                {{ $users->onEachSide(15)->links() }}
-            @endif
+
+                {{ $users->onEachSide(35)->links() }}
+
         </div>
     </div>
 
@@ -61,9 +61,9 @@
             </div>
         </div>
         <div>
-            @if (isset($users))
-             {{ $users->onEachSide(10)->links() }}
-            @endif
+
+             {{ $users->onEachSide(35)->links() }}
+
         </div>
     </div>
 @endsection

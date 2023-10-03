@@ -55,9 +55,9 @@ class HorariController extends Controller
         $hora = $request->input('hora');
         $dia = $request->input('dia');
         $user = $request->input('id');
-        $aula = 'GUARDIA';
+        $aula = 'A-101';
         $curs = 'GUARDIA';
-        $modul = 'GUARDIA';
+        $modul = 'G';
 
         if ($request->has('add')) {
             $data = array('hora' => $hora, "dia" => $dia, "profe" => $user, "aula" => $aula, "module" => $modul, "curso" => $curs);
@@ -84,6 +84,6 @@ class HorariController extends Controller
                 }
             }
         }
-      
+
     }
 }

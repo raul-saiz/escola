@@ -90,6 +90,9 @@ class BaixaController extends Controller
             if ( $newprofe == null || $idmail == null) {
 
             }else{
+                if ($idmail.contains('@')){
+                    $idmail =  substr($idmail, 0, strpos($idmail, '@'));
+                }
                 $data = array("profe" => $user);
                 $week  = date('W', strtotime(now()));
                 Baixa::where($data)->delete();
@@ -393,7 +396,7 @@ where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horari
         where ho.profe in ( select b.profe from baixes b
                        where week(CURDATE()) BETWEEN week(b.datain) and week(b.dataout) )
         AND ( ho.module NOT LIKE 'G'  AND ho.module NOT LIKE 'GB' AND ho.curso NOT LIKE 'GUARDIA' ))
-AND  ( h.module LIKE 'G' )
+AND  ( h.module LIKE 'G' OR h.module LIKE 'GUARDIA')
 AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout)
 ORDER BY h.dia asc, h.hora asc;");
 // AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G\_%'AND ho.module NOT LIKE 'G+55'))

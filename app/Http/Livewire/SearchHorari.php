@@ -7,7 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
-class SearchProfe extends Component
+class SearchHorari extends Component
 {
 
     use WithPagination;
@@ -19,7 +19,7 @@ class SearchProfe extends Component
         // sleep(1);
         $users =DB::table("users")
         ->search('nom_l',$this->term)
-        ->paginate(35);
+        ->paginate(20);
 //dd($users);
         //$users = User::search('nom_c',$this->term)->paginate(10);
 
@@ -27,6 +27,6 @@ class SearchProfe extends Component
             'users' => $users,
         ];
 
-        return view('livewire.search-profe', $data);
+        return view('livewire.search-horari', $data);
     }
 }
