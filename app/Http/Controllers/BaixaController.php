@@ -91,7 +91,7 @@ class BaixaController extends Controller
             if ( $newprofe == null || $idmail == null) {
 
             }else{
-                if ($idmail.contains('@')){
+                if (str_contains($idmail,'@')){
                     $idmail =  substr($idmail, 0, strpos($idmail, '@'));
                 }
                 $data = array("profe" => $user);
