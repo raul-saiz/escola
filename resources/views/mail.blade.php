@@ -6,3 +6,4 @@
 <h2> GRUP : {{ $grup }} </h2>
 <h2> MODUL : {{ $modul }} </h2>
 <h2> TASCA : {{ $tasca }} </h2>
+<h2> OBSERVACIONS : {{ $obs }} </h2>

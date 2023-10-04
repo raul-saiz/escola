@@ -20,7 +20,7 @@ class MailController extends Controller {
    } */
    public function html_email($guardia) {
     $this->dades = $guardia['profe'];
-      $data = array('modul'=>$guardia['modul'], 'aula' => $guardia['aula'], 'hora' => $guardia['hora'], 'dia' =>$guardia['dia'],'grup' =>$guardia['grup'], 'tasca' =>$guardia['tasca']);
+      $data = array('modul'=>$guardia['modul'], 'aula' => $guardia['aula'], 'hora' => $guardia['hora'], 'dia' =>$guardia['dia'],'grup' =>$guardia['grup'], 'tasca' =>$guardia['tasca'], 'obs' =>$guardia['obs']);
       Mail::send('mail', $data, function($message) {
          $message->to('rsaiz2@xtec.cat', 'Prefectura ViB ')->subject
             ('Assignació i/o modificació de guardia');

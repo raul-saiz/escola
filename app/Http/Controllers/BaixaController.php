@@ -24,7 +24,7 @@ class BaixaController extends Controller
         $dat = array("profe" => $id);
         $result = Baixa::where($dat)->first();
         if (!empty($result)) {
-            $data = array("profe" => $result->profe, "datain" => $result->datain, "dataout" => $result->dataout);
+            $data = array("profe" => $result->profe, "datain" => $result->datain, "dataout" => $result->dataout,"obs" => $result->obs);
             return view('back.pages.modifbaixa', compact('data'));
         } else {
             $data = array("profe" => $id);
@@ -54,13 +54,14 @@ class BaixaController extends Controller
         $in = $request->input('in');
         $user = $request->input('profe');
         $tasca = $request->input('tasca');
+        $obs = $request->input('observacio');
         $idmail = $request->input('mail');
         $newprofe = $request->input('newprofe');
 
         if ($request->has('add')) {
             Baixa::updateOrCreate(
                 ['profe' => $user],
-                ['datain' => $in, 'dataout' => $out, 'tasca' =>$tasca]
+                ['datain' => $in, 'dataout' => $out, 'tasca' =>$tasca, 'obs' => $obs]
             );
            // dd($tasca);
             $data = array("profe" => $user);
@@ -69,7 +70,7 @@ class BaixaController extends Controller
             DB::table("asignades")
                 ->where('modul','LIKE','%'.$user.'%')
                 ->where('semana', $week)
-                ->update(['tasca' =>$tasca]);
+                ->update(['tasca' =>$tasca, 'obs' => $obs]);
            // Asignacio::where()->update();
 
         }
@@ -139,23 +140,30 @@ class BaixaController extends Controller
                //dd($extra);
                $tasca = $extra[3];
 
+               $data = array("profe" => $extra[4]);
+               //dd($data);
+               $result = Baixa::where($data)->first();
+
+                //dd($result);
+
                     Asignacio::updateOrCreate(
                         ['semana' => $week, 'modul' => $modul],
-                        ['profe' => $profe, 'tasca' => $tasca]
+                        ['profe' => $profe, 'tasca' => $tasca, 'obs' => $result->obs]
                     );
 
                     if ( ! DB::table('mailsenviados')->where('semana',$week)
                             ->where('modul',$modul)
                             ->where('profe',$profe)
-                            ->where('tasca',$tasca)->exists() ){
+                            ->where('tasca',$tasca)
+                            ->where('obs',$result->obs)
+                            ->exists() ){
 
-                              DB::table('mailsenviados')
-                              ->where('modul',$modul)
-                              ->delete();
+                                DB::table('mailsenviados')
+                                ->where('modul',$modul)
+                                ->delete();
 
                               Mailsender::Create(
-                                ['semana' => $week, 'modul' => $modul,'profe' => $profe,  'tasca' => $tasca]
-                            );
+                                ['semana' => $week, 'modul' => $modul,'profe' => $profe,  'tasca' => $tasca , 'obs' =>$result->obs ] );
 
                             $diasemana = [ '1'=>'Dilluns', '2'=>'Dimarts', '3'=>'Dimecres', '4'=>'Dijous', '5'=>'Divendres'];
                             $titulo_horas = [
@@ -171,7 +179,7 @@ class BaixaController extends Controller
 
 //$data = array('profe' => $profe.'@xtec.cat', 'modul'=> $extra[4], 'aula' => $extra[5], 'hora' => $extra[1], 'dia' => $auxdia, 'tasca' => $extra[2]);
 
-                            $data = array('profe' => $profe.'@xtec.cat', 'modul'=> $extra[5], 'aula' => $extra[6], 'hora' => $titulo_horas[$extra[1]], 'dia' => $diasemana[$extra[0]],'grup' => $extra[2], 'tasca' => $extra[3]);
+                            $data = array('profe' => $profe.'@xtec.cat', 'modul'=> $extra[5], 'aula' => $extra[6], 'hora' => $titulo_horas[$extra[1]], 'dia' => $diasemana[$extra[0]],'grup' => $extra[2], 'tasca' => $extra[3] , 'obs' => $result->obs);
 //dd($data);
                              $result = app('App\Http\Controllers\MailController')->html_email($data);
 
@@ -282,7 +290,7 @@ class BaixaController extends Controller
         group by ho.dia,ho.hora,ho.curso,ho.module,ho.aula,b.tasca,ho.curso;
     ");
 
-   
+
 $profes_baixa = DB::select("SELECT DISTINCT h.dia, h.hora, h.profe, IFNULL(otra.cnt,0) as fetes from horaris_horario h
 LEFT JOIN ( SELECT COUNT(a.profe) as cnt , profe from asignades a group by a.profe ) otra
 ON h.profe = otra.profe

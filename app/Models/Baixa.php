@@ -35,6 +35,6 @@ class Baixa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['profe', 'datain', 'dataout', 'tasca'];
+    protected $fillable = ['profe', 'datain', 'dataout', 'tasca','obs'];
 }
 

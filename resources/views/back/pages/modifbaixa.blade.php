@@ -52,6 +52,19 @@
                      @endif
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <label>Observacions : </label>
+                </td>
+                    <td>
+                        @if (isset( $data['obs'] ))
+                            <input  name="observacio" value={{ $data['obs'] }}>
+                     @else
+                            <input  name="observacio" >
+                     @endif
+                </td>
+            </tr>
+
 
 
             <tr>

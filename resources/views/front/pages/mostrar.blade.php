@@ -42,11 +42,13 @@
                                                         {{ $titulo_horas[$h - 1] }}
                                                     </td>
                                                     @else
-                                                        @if ($d == $day && isset($asignados[$h][$d]))
+                                                        @if ($d == $day && isset($asignados[$h][$d]) )
 
                                                             @for($i = 1; $i <=  sizeof($asignados[$h][$d]); $i++)
+
+                                                                @if($asignados[$h][$d] [$i] [1] !== 'nocobrir')
                                                                 @if($i >1)
-                                                                    <tr><td></td>
+                                                                <tr><td></td>
                                                                 @endif
                                                                 <td>{{ $asignados[$h][$d] [$i] [1]}}</td>
                                                                 <td>{{ $asignados[$h][$d] [$i] [3]}}</td>
@@ -56,8 +58,11 @@
                                                                 @if($i >1)
                                                                     </tr>
                                                                 @endif
+                                                                @endif
+
                                                             @endfor
                                                         @elseif( $d == $day)
+                                                           <td>--</td>
                                                            <td>--</td>
                                                            <td>--</td>
                                                            <td>--</td>
