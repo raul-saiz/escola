@@ -19,7 +19,7 @@ class SearchHorari extends Component
         // sleep(1);
         $users =DB::table("users")
         ->search('nom_l',$this->term)
-        ->paginate(20);
+        ->paginate(35);
 //dd($users);
         //$users = User::search('nom_c',$this->term)->paginate(10);
 

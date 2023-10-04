@@ -45,7 +45,7 @@
         </div>
         <div>
 
-                {{ $users->onEachSide(35)->links() }}
+                {{ $users->onEachSide(3)->links() }}
 
         </div>
     </div>
@@ -62,7 +62,7 @@
         </div>
         <div>
 
-             {{ $users->onEachSide(35)->links() }}
+             {{ $users->onEachSide(3)->links() }}
 
         </div>
     </div>

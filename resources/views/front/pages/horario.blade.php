@@ -43,9 +43,9 @@
                                                 @if( $d ==1)
                                                 <td class="sort-score">{{ $titulo_horas[$h-1]  }}
                                                 @endif
-                                                @if ($calendario[$h][$d] == '-')
+                                                @if ($calendario[$h][$d] === '-')
                                                     <td class="sort-score">-</td>
-                                                @elseif ( Str::startsWith($calendario[$h][$d], 'GUARDIA') )
+                                                @elseif ( strcmp($calendario[$h][$d],'GUARDIA') === 0 || strcmp($calendario[$h][$d],'G') === 0) )
                                                     <td class="sort-score">GUARDIA</td>
                                                 @else
                                                     <td class="sort-score">{!! $calendario[$h][$d] !!}</td>

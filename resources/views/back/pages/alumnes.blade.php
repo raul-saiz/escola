@@ -66,6 +66,6 @@
 
             </div>
         </div>
-        <div> {{ $users->onEachSide(5)->links() }} </div>
+        <div> {{ $users->onEachSide(3)->links() }} </div>
     </div>
 @endsection

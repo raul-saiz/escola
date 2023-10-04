@@ -19,7 +19,7 @@ class HorariController extends Controller
     public function publicListado()
     {
         $users = User::query();
-        $users = $users->paginate(15);
+        $users = $users->simplePaginate(35);
         return view('front.pages.profes', compact('users'));
     }
 

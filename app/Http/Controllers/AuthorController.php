@@ -28,7 +28,7 @@ class AuthorController extends Controller
         DB::delete('delete from baixes where dataout < CURDATE()');
 
         $users = Baixa::query();
-        $users = $users->paginate(15);
+        $users = $users->simplePaginate(35);
         return view('back.pages.baixes', compact('users'));
     }
 
@@ -43,7 +43,7 @@ class AuthorController extends Controller
     public function listado()
     {
         $users = User::query();
-        $users = $users->paginate(15);
+        $users = $users->simplePaginate(35);
         return view('back.pages.profes', compact('users'));
     }
 
@@ -66,7 +66,7 @@ class AuthorController extends Controller
 
         $this->creaCalendar($horas);
         $calendario = $this->calendario;
-      
+
         return view('back.pages.horario', compact('user', 'horas', 'calendario', 'titulo_horas'));
     }
 
