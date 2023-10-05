@@ -299,7 +299,7 @@ where ( h.dia, h.hora ) in ( select DISTINCT ho.dia, ho.hora from horaris_horari
                        where week(CURDATE()) BETWEEN week(b.datain) and week(b.dataout) )
         AND ( ho.module NOT LIKE 'G'  AND ho.module NOT LIKE 'GB' AND ho.curso NOT LIKE 'GUARDIA' ))
 AND  ( h.module LIKE 'G' OR h.module LIKE 'GUARDIA')
-AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout)
+AND h.profe NOT IN (select b.profe from baixes b where CURDATE() < b.dataout AND CURDATE() >= b.datain)
 ORDER BY h.dia asc, h.hora asc;");
 // AND ( ho.module NOT LIKE 'GUARDIA%'  AND ho.module NOT LIKE 'G1' AND ho.module NOT LIKE 'GB\_%' AND ho.module NOT LIKE 'G\_%'AND ho.module NOT LIKE 'G+55'))
 //OR h.module LIKE 'G\_%'  OR h.module LIKE 'GB\_%' OR h.module LIKE 'G+55')
