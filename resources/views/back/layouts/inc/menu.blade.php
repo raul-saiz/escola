@@ -5,7 +5,8 @@
       </button>
       <h1 class="navbar-brand navbar-brand-autodark">
         <a href=".">
-          <img src="./static/logo-white.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image">
+          {{-- <img src="./static/logo-white.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image"> --}}
+          <img src="./static/logo-VIB-transparent_3.png" width="110" height="32" alt="Vidal i Barraquer" class="navbar-brand-image">
         </a>
       </h1>
       <div class="navbar-nav flex-row d-lg-none">
