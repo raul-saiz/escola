@@ -48,7 +48,7 @@
         <div class="page-wrapper">
             <!-- Page header -->
             <div class="page-header d-print-none">
-                @include('back.layouts.inc.header')
+               <!--   include('back.layouts.inc.header') -->
             </div>
             <!-- Page body -->
             <div class="page-body">

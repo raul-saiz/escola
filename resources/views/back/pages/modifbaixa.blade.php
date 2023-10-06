@@ -4,16 +4,18 @@
 
     <form action="{{ request()->route()->uri }}" method="post">
         <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-        <table>
+        <table style="width:100%" cols="3">
             <tr>
-                <td>NOM : </td>
+                <td style="width:20%">NOM : </td>
                 @if (isset($data['profe'] ))
-                <td><label type='text' name='profe'> {{ $data['profe']  }} </label></td>
+                <td style="width:25%"><label type='text' name='profe'> {{ $data['profe']  }} </label></td>
                 <input type="hidden" name="profe" value={{$data['profe']  }}>
                 @else
-                <td><label type='text' name='profe'> {{ $data['profe']  }} </label></td>
+                <td style="width:25%"><label type='text' name='profe'> {{ $data['profe']  }} </label></td>
                 <input type="hidden" name="profe" value={{ $data['profe']  }}>
                 @endif
+                <td >
+                </td>
             </tr>
             <tr>
                 <td>
@@ -54,13 +56,13 @@
             </tr>
             <tr>
                 <td>
-                    <label>Observacions : </label>
+                    <label>Observacions  <br>( 250 caracters max. ): </label>
                 </td>
-                    <td>
+                    <td colspan="3">
                         @if (isset( $data['obs'] ))
-                            <input  name="observacio" value={{ $data['obs'] }}>
+                            <textarea  style="width:75%;resize:none"   maxlength="250"  rows="7"  name="observacio" >{{ $data['obs'] }}</textarea>
                      @else
-                            <input  name="observacio" >
+                     <textarea  style="width:75%;resize:none"   maxlength="250"  rows="7"  name="observacio" > </textarea>
                      @endif
                 </td>
             </tr>
@@ -68,21 +70,26 @@
 
 
             <tr>
-                <td colspan='2'>
-                    <input type='submit' value="Introdueix Absència" name="add"/>
+                <td >
+                    <input type='submit' value="Introdueix Absència" style="background-color:green" name="add"/>
+                </td>
+                <td >  </td>
+                <td >
+                    <input type='submit' value="Esborrar Absència" style="background-color:red" name="delete"/>
                 </td>
             </tr>
 
             <tr>
-                <td colspan='2'>
-                    <input type='submit' value="Esborrar Absència" name="delete"/>
+
+            </tr>
+            <tr > <td colspan="3">
+                <hr>
                 </td>
             </tr>
-            <tr> <td>
-                </td>
-            </tr>
-            <tr>  <td>
+            <tr>  <td colspan="3">
+                <hr>
             </td></tr>
+
             <tr>
                 <td>NOM COMPLET ( Cognom Cognom , Nom ): </td>
 
@@ -101,7 +108,7 @@
             </tr>
             <tr>
                 <td colspan='2'>
-                    <input type='submit' value="Canvi de Profe" name="chg"/>
+                    <input type='submit' value="Canvi de Profe" name="chg" style="background-color:brown"/>
                 </td>
             </tr>
         </table>

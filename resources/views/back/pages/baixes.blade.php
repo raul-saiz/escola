@@ -14,11 +14,11 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th><button class="table-sort" data-sort="sort-name">Nom</button></th>
-                                <th><button class="table-sort" data-sort="sort-city">Data inici</button></th>
-                                <th><button class="table-sort" data-sort="sort-type">Data fi</button></th>
-                                <th><button class="table-sort" data-sort="sort-type">tasca</button></th>
-                                <th><button class="table-sort" data-sort="sort-type">Observacions</button></th>
+                                <th>Nom</th>
+                                <th>Data inici</th>
+                                <th>Data fi</th>
+                                <th>Tasca</th>
+                                <th style="width:45%">Observacions</th>
                             </tr>
                         </thead>
                         <tbody class="table-tbody">
