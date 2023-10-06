@@ -46,15 +46,15 @@
 
         <div class="page-wrapper">
             <!-- Page header -->
-            <div class="page-header d-print-none">
+          {{--   <div class="page-header d-print-none">
                 @include('back.layouts.inc.header')
-            </div>
+            </div> --}}
             <!-- Page body -->
             <div class="page-body">
                 @yield('content')
             </div>
             @include('back.layouts.inc.footer')
-        
+
     </div>
 
     <!-- Libs JS -->
