@@ -155,7 +155,7 @@ class BaixaController extends Controller
                             ->where('modul',$modul)
                             ->where('profe',$profe)
                             ->where('tasca',$tasca)
-                            ->where('obs',$result->obs)
+                            //->where('obs',$result->obs)
                             ->exists() ){
 
                                 DB::table('mailsenviados')
