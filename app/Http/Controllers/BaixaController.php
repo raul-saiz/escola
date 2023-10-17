@@ -278,7 +278,7 @@ class BaixaController extends Controller
 
         $assig_a_cobrir = DB::select("SELECT DISTINCT ho.dia, ho.hora,ho.curso, ho.module,  ho.aula, max(ho.profe) as profe , b.tasca , ho.curso FROM horaris_horario ho, baixes b
         WHERE ho.profe = b.profe
-        AND ( ho.module NOT LIKE 'TU' AND ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' )
+        AND ( ho.module NOT LIKE 'G' AND ho.module NOT LIKE 'GB' )
         AND ( ho.curso NOT LIKE 'GUARDIA' AND ho.curso NOT LIKE 'G')
         AND (
             ( WEEK(b.datain) = WEEK(CURDATE()) AND WEEK(b.dataout) = WEEK(CURDATE()) AND ho.dia BETWEEN WEEKDAY(b.datain)+1 AND WEEKDAY(b.dataout)+1)
